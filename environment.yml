@@ -1,0 +1,17 @@
+name: chatbot_experiments
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - langchain
+    - langgraph
+    - langchain_openai
+    - weaviate-client>=3.26.7,<4.0.0
+    - python-dotenv
+    - tiktoken
+    - langchain-community
+    - langchain-weaviate
+    - langchain-google-genai

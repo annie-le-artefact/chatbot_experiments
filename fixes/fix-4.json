@@ -1,0 +1,37 @@
+{
+  "name": "Fix ResourceWarning for unclosed Weaviate connections",
+  "objective": "Resolve the ResourceWarning messages by ensuring the Weaviate client connection is properly closed after use in both the ingestion and query processes.",
+  "status": "completed",
+  "tasks": [
+    {
+      "step": 1,
+      "prompt": "Refactor `src/ingestion/ingest.py` to use a context manager (`with`) for the Weaviate client to ensure the connection is closed after data ingestion.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 1] Ensure Weaviate client is closed in ingestion script.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 2,
+      "prompt": "Refactor `src/agent/router.py` to manage and close the Weaviate client connection properly after a query is processed.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 2] Ensure Weaviate client is closed after query.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 3,
+      "prompt": "Verify the fix by running the application and checking that the ResourceWarning messages no longer appear.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 3] Verify resource warnings are resolved.",
+        "commit_hash": null
+      }
+    }
+  ]
+}

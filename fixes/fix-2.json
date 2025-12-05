@@ -1,0 +1,37 @@
+{
+  "name": "Fix similarity_search with None embedding",
+  "objective": "Resolve the error caused by a null embedding being used in a similarity search, ensuring the user's query is correctly vectorized before being sent to Weaviate.",
+  "status": "completed",
+  "tasks": [
+    {
+      "step": 1,
+      "prompt": "Investigate the RAG chain implementation in `src/agent/router.py` to identify where `similarity_search` is called and why the query embedding is not being generated.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 1] Investigate null embedding in RAG chain.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 2,
+      "prompt": "Modify the RAG chain to ensure the user's query is passed through the Gemini embedding model before the `similarity_search` is executed.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 2] Fix query vectorization before similarity search.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 3,
+      "prompt": "Verify the fix by running the application and performing a search.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 3] Verify similarity search fix.",
+        "commit_hash": null
+      }
+    }
+  ]
+}

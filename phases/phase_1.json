@@ -1,0 +1,58 @@
+{
+  "phase": 1,
+  "name": "The Core Logic POC (Terminal-Based)",
+  "objective": "Validate the 'Intelligent Routing' and 'Data Retrieval' logic without UI or Cloud overhead.",
+  "status": "completed",
+  "tasks": [
+    {
+      "step": 1,
+      "prompt": "Set up local Docker for Weaviate by running `docker-compose up -d`.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 1] Set up Weaviate Docker environment.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 2,
+      "prompt": "Write scripts to chunk and vectorise distinct datasets (e.g., 'Handbooks') in `src/ingestion/ingest.py`.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 2] Implement data ingestion for Handbooks.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 3,
+      "prompt": "Implement the LangGraph router in `src/agent/router.py` to classify input into Simple vs. Complex.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 3] Implement LangGraph router for query classification.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 4,
+      "prompt": "Implement the RAG Node in `src/agent/router.py` to query Weaviate and generate answers.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 4] Implement LangGraph RAG node for answer generation.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 5,
+      "prompt": "Build a simple `while True:` Python terminal loop in `src/main.py` for testing interaction.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 5] Implement terminal interaction loop.",
+        "commit_hash": null
+      }
+    }
+  ]
+}

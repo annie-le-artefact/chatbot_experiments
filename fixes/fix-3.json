@@ -1,0 +1,27 @@
+{
+  "name": "Fix 404 Not Found error for gemini-pro model",
+  "objective": "Resolve the '404 models/gemini-pro is not found' error by updating the model name to a valid, versioned identifier in the ChatGoogleGenerativeAI initialization.",
+  "status": "completed",
+  "tasks": [
+    {
+      "step": 1,
+      "prompt": "Update the `ChatGoogleGenerativeAI` initialization in `src/agent/router.py` to use the model name `gemini-1.0-pro` instead of `gemini-pro`.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 1] Update Gemini model name to gemini-1.0-pro.",
+        "commit_hash": null
+      }
+    },
+    {
+      "step": 2,
+      "prompt": "Verify the fix by running the application and sending a query.",
+      "status": "completed",
+      "time": null,
+      "git": {
+        "commit_message": "[Step 2] Verify model name fix.",
+        "commit_hash": null
+      }
+    }
+  ]
+}

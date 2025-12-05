@@ -1,0 +1,9 @@
+langchain
+langgraph
+langchain_openai
+weaviate-client>=4.0.0
+python-dotenv
+tiktoken
+langchain-community
+langchain-weaviate
+langchain-google-genai
