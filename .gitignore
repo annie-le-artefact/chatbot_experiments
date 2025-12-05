@@ -16,3 +16,6 @@ venv/
 .vscode/
 *.swp
 *.swo
+
+# Data and databases
+weaviate_data/
