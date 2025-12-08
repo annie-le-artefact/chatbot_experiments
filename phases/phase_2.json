@@ -1,0 +1,48 @@
+{
+  "phase": 2,
+  "name": "Web Content Ingestion and Scalable Crawling",
+  "objective": "Ingest content from specified web links into the RAG system and build a foundation for crawling entire websites to expand the knowledge base.",
+  "status": "pending",
+  "sub_phases": [
+    {
+      "name": "Phase 2.1: Implement the Intelligent Ingestion Pipeline",
+      "objective": "Build a modular, metadata-centric, and resumable pipeline that crawls, enriches, processes, and ingests web content with structured metadata and hierarchical context.",
+      "status": "pending",
+      "git": {
+        "commit_message": "feat(ingestion): implement full resumable web content pipeline"
+      },
+      "tasks": [
+        {
+          "step": 1,
+          "prompt": "Create a `progress.json` file and modify `src/ingestion/crawler.py` to be resumable. The crawler must check `progress.json` and skip any URLs already marked as `crawled`. After a successful crawl, it must update the progress file.",
+          "status": "completed"
+        },
+        {
+          "step": 2,
+          "prompt": "Modify `src/ingestion/processor.py` to be resumable and preserve line breaks. It must check `progress.json`, skip already processed files, use '\n' as a separator when extracting text, and update the progress file upon completion.",
+          "status": "completed"
+        },
+        {
+          "step": 3,
+          "prompt": "Modify `src/ingestion/translator.py` to be resumable. It must check `progress.json`, skip already translated files, and update the progress file upon completion.",
+          "status": "completed"
+        },
+        {
+          "step": 4,
+          "prompt": "Modify `src/ingestion/ingest.py` to perform hierarchy-aware chunking on the final English text files and ingest them into a 'WebContent' collection in Weaviate with full metadata.",
+          "status": "pending"
+        },
+        {
+          "step": 5,
+          "prompt": "Update `src/main.py` to add a `--crawl` flag that orchestrates the execution of the full, resumable pipeline.",
+          "status": "pending"
+        },
+        {
+          "step": 6,
+          "prompt": "Update the agent's routing logic in `src/agent/router.py` to query the `WebContent` collection, leveraging the new metadata for more precise retrieval.",
+          "status": "pending"
+        }
+      ]
+    }
+  ]
+}
