@@ -7,10 +7,12 @@
     {
       "name": "Phase 2.1: Implement the Intelligent Ingestion Pipeline",
       "objective": "Build a modular, metadata-centric, and resumable pipeline that crawls, enriches, processes, and ingests web content with structured metadata and hierarchical context.",
-      "status": "pending",
+      "status": "completed",
       "git": {
         "commit_message": "feat(ingestion): implement full resumable web content pipeline"
       },
+      "commit_hash": "af815aefdb6ccc199d174068e5acd4e3032c9a83",
+      "timestamp": "2025-12-08T12:20:00Z",
       "tasks": [
         {
           "step": 1,
