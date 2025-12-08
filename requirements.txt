@@ -7,3 +7,6 @@ tiktoken
 langchain-community
 langchain-weaviate
 langchain-google-genai
+requests
+beautifulsoup4
+playwright
