@@ -52,6 +52,37 @@ The following critical bugs were resolved during development:
 *   **JavaScript Rendering Failure:** Replaced `requests` with `Playwright` in the crawler.
 *   **`langchain_core` `ModuleNotFoundError`:** Resolved dependency conflicts by upgrading `langchain` packages.
 
-## IV. Project Organization
+## IV. Vector Store Migration: Weaviate to Qdrant
+
+The project successfully migrated its vector store from Weaviate to Qdrant to streamline the setup and improve performance.
+
+1.  **Rationale:**
+    *   **Simplified Setup:** Qdrant's Docker setup is more straightforward.
+    *   **Compatibility:** The `langchain-qdrant` library is well-maintained and integrates seamlessly with the existing LangChain components.
+
+2.  **Implementation:**
+    *   **New Module:** Created `src/vector_store/qdrant_db.py` to manage the Qdrant client and retriever, centralizing the connection logic.
+    *   **Updated Ingestion:** Refactored `src/ingestion/ingest.py` to use the new Qdrant module, ensuring documents are correctly chunked and ingested into a Qdrant collection.
+    *   **Updated RAG Chain:** Modified `src/agent/router.py` to use the Qdrant retriever, seamlessly integrating the new vector store into the RAG chain.
+    *   **Dependency Management:** Updated `requirements.txt` to include `langchain-qdrant` and `qdrant-client`, and removed `weaviate-client`.
+
+## V. Bug Fixes
+
+The following critical bugs were resolved during development:
+
+*   **`ValueError: models/embedding-001 is not among supported models`:** Updated the embedding model to a supported version (`models/text-embedding-004`).
+*   **`AttributeError: 'QdrantClient' object has no attribute 'search'`:** Corrected the `QdrantVectorStore` initialization to use the `embedding` parameter instead of `embeddings`.
+*   **`TypeError: Client.__init__() got an unexpected keyword argument 'client'`:** Refactored the Qdrant client instantiation to correctly pass the client object.
+*   **`404 Not Found: Collection ... doesn't exist!`:** Ensured the Qdrant collection is created before documents are added.
+*   **`ModuleNotFoundError` on startup:** Corrected the import paths and now run the main script as a module (`python -m src.main`).
+*   **Missing `text_key` Argument:** Fixed `TypeError` in `WeaviateVectorStore` initialization.
+*   **`None` Embedding:** Ensured user queries are vectorized before similarity search.
+*   **`gemini-pro` Model Not Found:** Updated to a stable, versioned model name (`gemini-1.0-pro` and later `gemini-pro-latest`).
+*   **Weaviate Connection `ResourceWarning`:** Refactored client handling to ensure connections are properly closed.
+*   **JavaScript Rendering Failure:** Replaced `requests` with `Playwright` in the crawler.
+*   **`langchain_core` `ModuleNotFoundError`:** Resolved dependency conflicts by upgrading `langchain` packages.
+
+## VI. Project Organization
 
 *   Moved Gemini model-related files (`GEMINI_MODELS.md`, `list_gemini_models.py`) to a dedicated `src/gemini/` directory.
+*   Created a `src/vector_store/` directory to house the Qdrant database module.

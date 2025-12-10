@@ -7,7 +7,7 @@ This project is a Proof of Concept (POC) for a terminal-based intelligent dialog
 The system is built in Python and leverages several key technologies:
 - **Orchestration:** LangGraph is used to define the flow of logic, starting with a simple router that directs queries to a RAG chain.
 - **Language Model:** The system uses a Google Gemini model for language understanding and generation.
-- **Vector Store:** Weaviate serves as the vector database, running in a local Docker container.
+- **Vector Store:** Qdrant serves as the vector database, running in a local Docker container.
 - **Data Ingestion:** Scripts are provided to process and vectorize documents.
 
 ## Building and Running
@@ -18,7 +18,7 @@ The system is built in Python and leverages several key technologies:
 
 ### 1. Set Up Environment
 
-**a. Start Weaviate:**
+**a. Start Qdrant:**
 ```bash
 docker-compose up -d
 ```
@@ -68,7 +68,7 @@ Development is organized into **phases** (for new features) and **fixes** (for b
 
 3.  **Commit (per phase/fix):**
     *   **Only after all tasks** in the phase or fix are `completed` can the changes be committed.
-    *   Create a single new branch for the entire phase or fix (e.g., `feature/phase-2` or `fix/weaviate-connection`).
+    *   Create a single new branch for the entire phase or fix (e.g., `feature/phase-2` or `fix/db-connection`).
     *   Stage all relevant files (`git add .`).
     *   Commit the changes with a single, comprehensive message that summarizes the objective of the phase or fix. This message should be defined in the plan file.
 

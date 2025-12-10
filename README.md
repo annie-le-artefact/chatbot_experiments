@@ -14,16 +14,16 @@ This project is a Proof of Concept (POC) for a terminal-based intelligent dialog
 
 ## 1. Overview
 
-This project validates RAG logic in a terminal environment. It uses LangGraph for orchestration, a Gemini LLM for generation, and Weaviate for vector storage. The system ingests data from external web pages via a sophisticated, resumable pipeline.
+This project validates RAG logic in a terminal environment. It uses LangGraph for orchestration, a Gemini LLM for generation, and Qdrant for vector storage. The system ingests data from external web pages via a sophisticated, resumable pipeline.
 
 ## 2. Features
 
-*   **Local Weaviate:** Runs a local Docker instance of Weaviate for vector storage.
+*   **Local Qdrant:** Runs a local Docker instance of Qdrant for vector storage.
 *   **Intelligent Web Ingestion Pipeline:** A fully automated, resumable pipeline that:
     1.  **Crawls:** Uses Playwright to fetch JavaScript-rendered HTML from URLs in `data/data_sources.json`.
     2.  **Processes:** Extracts clean text from the HTML, preserving structure.
     3.  **Translates:** Performs document-level translation to English using a Gemini LLM.
-    4.  **Chunks & Ingests:** Splits the translated text into semantically coherent chunks and stores them in Weaviate with metadata.
+    4.  **Chunks & Ingests:** Splits the translated text into semantically coherent chunks and stores them in Qdrant with metadata.
 *   **RAG Agent:** A LangGraph agent that performs RAG against the ingested data.
 *   **Terminal Interaction:** A simple CLI for interactive Q&A.
 
@@ -34,7 +34,7 @@ This project validates RAG logic in a terminal environment. It uses LangGraph fo
 *   Python 3.9+ & Conda
 
 ### Setup Steps
-1.  **Start Weaviate:**
+1.  **Start Qdrant:**
     ```bash
     docker-compose up -d
     ```
@@ -59,30 +59,28 @@ This project validates RAG logic in a terminal environment. It uses LangGraph fo
 To ensure commands are run in the correct environment, prepend them with `conda run -n chatbot_experiments`.
 
 ### 4.1 Ingesting Web Content
-To run the entire resumable pipeline (crawl, process, translate, and ingest into Weaviate), use the `--crawl` flag:
+To run the entire resumable pipeline (crawl, process, translate, and ingest into Qdrant), use the `--crawl` flag:
 ```bash
-conda run -n chatbot_experiments python src/main.py --crawl
+conda run -n chatbot_experiments python -m src.main --crawl --dir data/crawled/processed
 ```
 This single command will manage all steps. If interrupted, you can run it again to resume where it left off.
 
 ### 4.1.1 Testing the Ingestion Process
-To test the chunking and ingestion directly, run the `ingest.py` script:
-```bash
-conda run -n chatbot_experiments python src/ingestion/ingest.py
-```
+To test the chunking and ingestion directly, you can run the `ingest.py` script, although it's recommended to use the `main.py` script as shown above.
+
 **Prerequisites:**
-*   Weaviate must be running (`docker-compose up -d`).
+*   Qdrant must be running (`docker-compose up -d`).
 *   Your Conda environment (`chatbot_experiments`) must be created.
 *   A valid `GEMINI_API_KEY` must be set in your `.env` file.
 *   At least one translated English text file (`_en.txt`) must exist in `data/crawled/processed/`.
 
 **What to Expect:**
-The script will ingest new or updated `_en.txt` files, chunk them, and load them into the `WebContent` collection in Weaviate. Afterwards, it will display the first 5 ingested chunks, including their source URL, title, chunk index, and content snippet.
+The script will ingest new or updated `_en.txt` files, chunk them, and load them into the `web_content` collection in Qdrant.
 
 ### 4.2 Running the Chatbot
 Once data has been ingested, you can start the dialog system for Q&A:
 ```bash
-conda run -n chatbot_experiments python src/main.py
+conda run -n chatbot_experiments python -m src.main
 ```
 
 ## 5. Project Structure

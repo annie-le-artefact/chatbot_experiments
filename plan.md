@@ -12,7 +12,7 @@ This document outlines the roadmap for building an Enhanced Dialog Flow architec
 * **Authentication (Phase 3+):** **Google OAuth 2.0**.
 
 ### Data Layer
-* **Vector Store:** **Weaviate** (Cloud-native, supports hybrid search).
+* **Vector Store:** **Qdrant** (Cloud-native, supports hybrid search).
 * **Knowledge Graph (Phase 5):** **Neo4j** (For regulatory/structured data).
 
 ### Infrastructure & DevOps
@@ -30,11 +30,11 @@ This document outlines the roadmap for building an Enhanced Dialog Flow architec
 * **Focus:** Pure Python logic + Local Vector Store.
 * **Diagram Mapping:** *Intelligent Routing, Single-shot query, Multi-agent query, Data Retrieval (Vector Store only).*
 * **Tasks:**
-    * **Environment:** Set up local Docker for Weaviate.
+    * **Environment:** Set up local Docker for Qdrant.
     * **Ingestion:** Write scripts to chunk and vectorise distinct datasets (e.g., "Handbooks").
     * **LangGraph Agent:** Implement the router:
         * *Router Node:* Classify input -> Simple vs. Complex.
-        * *RAG Node:* Query Weaviate -> Generate Answer.
+        * *RAG Node:* Query Qdrant -> Generate Answer.
     * **Interaction:** Build a simple `while True:` Python terminal loop for testing.
 * **Deliverable:** A CLI tool where a user inputs a question and receives a cited answer.
 
@@ -45,7 +45,7 @@ This document outlines the roadmap for building an Enhanced Dialog Flow architec
 * **Tasks:**
     * **Dockerize:** Create `Dockerfile` for the Python application.
     * **Helm Charts:**
-        * Configure `charts/weaviate` for the vector store.
+        * Configure `charts/qdrant` for the vector store.
         * Configure `charts/app` for the agent application.
     * **CI/CD:** Configure **Google Cloud Build** triggers to build images on git push.
     * **Observability:** Deploy **Prometheus** sidecars to scrape basic application metrics (latency, error rates).
