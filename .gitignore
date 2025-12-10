@@ -22,3 +22,4 @@ weaviate_data/
 data/crawled/
 data/handbooks/
 qdrant_data/
+helper/
