@@ -1,0 +1,67 @@
+{
+  "phase": 2,
+  "name": "Web Content Ingestion and RAG Integration",
+  "objective": "Implement a modular, metadata-centric, and resumable pipeline that crawls, enriches, processes, translates, and chunks raw web content, ingesting it into a Qdrant vector store for use by a RAG agent.",
+  "status": "completed",
+  "sub_phases": [
+    {
+      "name": "Phase 2.1: Implement the Intelligent Ingestion Pipeline",
+      "objective": "Build the crawling, processing, translation, and chunking stages of the web content pipeline, ensuring they are resumable and metadata-aware.",
+      "status": "completed",
+      "git": {
+        "commit_message": "feat(ingestion): implement full resumable web content pipeline"
+      },
+      "commit_hash": "af815aefdb6ccc199d174068e5acd4e3032c9a83",
+      "timestamp": "2025-12-08T12:20:00Z",
+      "tasks": [
+        {
+          "step": 1,
+          "prompt": "Create a `progress.json` file and modify `src/ingestion/crawler.py` to be resumable. The crawler must check `progress.json` and skip any URLs already marked as `crawled`. After a successful crawl, it must update the progress file.",
+          "status": "completed"
+        },
+        {
+          "step": 2,
+          "prompt": "Modify `src/ingestion/processor.py` to be resumable and preserve line breaks. It must check `progress.json`, skip already processed files, use ' ' as a separator when extracting text, and update the progress file upon completion.",
+          "status": "completed"
+        },
+        {
+          "step": 3,
+          "prompt": "Modify `src/ingestion/translator.py` to be resumable. It must check `progress.json`, skip already translated files, and update the progress file upon completion.",
+          "status": "completed"
+        },
+        {
+          "step": 4,
+          "prompt": "Modify `src/ingestion/ingest.py` to implement the Recursive Character Text Splitter. It should read the translated English text files (`*_en.txt`), chunk them, and prepare them for ingestion into Qdrant. The chunking should be resumable, checking `progress.json`.",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "name": "Phase 2.2: Qdrant Integration and RAG Agent Enhancement",
+      "objective": "Integrate Qdrant as the vector store, ingest the chunked web content, and enhance the RAG agent to query the new data.",
+      "status": "completed",
+      "git": {
+        "commit_message": "feat: Replace Weaviate with Qdrant for vector storage"
+      },
+      "commit_hash": "70414ca...",
+      "timestamp": "2025-12-10T15:00:00Z",
+      "tasks": [
+        {
+          "step": 1,
+          "prompt": "Update `src/ingestion/ingest.py` to connect to Qdrant, create a 'web_content' collection if it doesn't exist, and ingest the generated text chunks. This step is resumable via `progress.json`.",
+          "status": "completed"
+        },
+        {
+          "step": 2,
+          "prompt": "Modify `src/agent/router.py` to include logic for querying the 'web_content' collection in Qdrant. The agent should be able to intelligently select between existing data sources and the new web content based on the user's query.",
+          "status": "completed"
+        },
+        {
+          "step": 3,
+          "prompt": "Update `src/main.py` to add a `--crawl` flag that orchestrates the execution of the full, resumable pipeline, calling the `ingest_documents` function from `src/ingestion/ingest.py`.",
+          "status": "completed"
+        }
+      ]
+    }
+  ]
+}
