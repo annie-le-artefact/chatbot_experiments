@@ -1,12 +1,14 @@
+-i https://pypi.tuna.tsinghua.edu.cn/simple
 langchain
-langgraph
-langchain_openai
-weaviate-client>=4.0.0
-python-dotenv
-tiktoken
 langchain-community
-langchain-weaviate
+langchain-core
 langchain-google-genai
+langchain-text-splitters
+langgraph
 requests
 beautifulsoup4
-playwright
+trafilatura
+python-dotenv
+langchain-qdrant
+qdrant-client
+fastembed

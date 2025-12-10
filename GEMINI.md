@@ -14,7 +14,7 @@ The system is built in Python and leverages several key technologies:
 
 ### Prerequisites
 - Docker
-- Python 3.9+ and `pip`
+- Python 3.9+ & Conda
 
 ### 1. Set Up Environment
 
@@ -31,12 +31,14 @@ GEMINI_API_KEY="your_gemini_api_key_here"
 
 **c. Install Dependencies:**
 ```bash
-pip install -r requirements.txt
+conda env create -f environment.yml
 ```
+This creates the `chatbot_experiments` environment and installs dependencies from `requirements.txt`.
 
 ### 2. Run the Application
+To ensure commands are run in the correct environment, prepend them with `conda run -n chatbot_experiments`.
 ```bash
-python src/main.py --ingest
+conda run -n chatbot_experiments python src/main.py --crawl
 ```
 
 To stop the application, type `exit` in the terminal.
@@ -60,6 +62,7 @@ Development is organized into **phases** (for new features) and **fixes** (for b
         *   Update its `status` to `in_progress` in the `.json` file.
         *   Implement the necessary code.
         *   Test and verify that the changes work as expected and do not introduce regressions.
+        *   For example: `conda run -n chatbot_experiments python src/main.py --crawl`
         *   If bugs are found, they should be addressed before moving on.
         *   Once the task is complete, update its `status` to `completed`.
 

@@ -1,0 +1,53 @@
+{
+  "phase": 3,
+  "name": "Web Content Ingestion and RAG Integration",
+  "objective": "Perform hierarchy-aware chunking on translated web content, ingest it into Weaviate with rich metadata, and then enhance the RAG agent to leverage this new data for more precise and context-aware information retrieval.",
+  "status": "pending",
+  "sub_phases": [
+    {
+      "name": "Phase 3.1: Chunking and Weaviate Ingestion",
+      "objective": "Implement recursive character text splitting, chunk translated web content, and ingest these chunks into a 'WebContent' collection in Weaviate with detailed metadata.",
+      "status": "pending",
+      "git": {
+        "commit_message": "feat(ingestion): implement recursive character chunking and Weaviate ingestion for web content"
+      },
+      "tasks": [
+        {
+          "step": 1,
+          "prompt": "Modify `src/ingestion/ingest.py` to implement the Recursive Character Text Splitter. It should read the translated English text files (`*_en.txt`), chunk them, and prepare them for ingestion into Weaviate. The chunking should be resumable, checking `progress.json`.",
+          "status": "completed"
+        },
+        {
+          "step": 2,
+          "prompt": "Update `src/ingestion/ingest.py` to connect to Weaviate, create a 'WebContent' collection if it doesn't exist, and ingest the generated text chunks along with their full metadata (source URL, document title, etc.). This step should also be resumable.",
+          "status": "pending"
+        },
+        {
+          "step": 3,
+          "prompt": "Update `src/main.py` to add a `--crawl` flag that orchestrates the execution of the full, resumable pipeline, calling the `ingest_web_content` function from `src/ingestion/ingest.py`.",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "name": "Phase 3.2: Enhance RAG Agent with Web Content Retrieval",
+      "objective": "Update the RAG agent's routing logic to effectively query the new 'WebContent' collection, utilizing metadata filters for more precise and context-aware information retrieval.",
+      "status": "pending",
+      "git": {
+        "commit_message": "feat(agent): enhance RAG with WebContent retrieval and metadata filters"
+      },
+      "tasks": [
+        {
+          "step": 1,
+          "prompt": "Modify `src/agent/router.py` to include logic for querying the 'WebContent' collection in Weaviate. The agent should be able to intelligently select between existing data sources and the new web content based on the user's query and available metadata.",
+          "status": "completed"
+        },
+        {
+          "step": 2,
+          "prompt": "Implement metadata filtering within the `router.py` to leverage fields like source URL, document title, and potentially publication date for more refined retrieval from the 'WebContent' collection.",
+          "status": "pending"
+        }
+      ]
+    }
+  ]
+}

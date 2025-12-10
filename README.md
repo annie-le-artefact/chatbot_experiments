@@ -7,24 +7,23 @@ This project is a Proof of Concept (POC) for a terminal-based intelligent dialog
 2.  [Features](#2-features)
 3.  [Setup](#3-setup)
 4.  [Usage](#4-usage)
-    *   [4.1 Handbook Ingestion](#41-handbook-ingestion)
-    *   [4.2 Web Content Ingestion Pipeline](#42-web-content-ingestion-pipeline)
-    *   [4.3 Running the Chatbot](#43-running-the-chatbot)
+    *   [4.1 Ingesting Web Content](#41-ingesting-web-content)
+    *   [4.1.1 Testing the Ingestion Process](#411-testing-the-ingestion-process)
+    *   [4.2 Running the Chatbot](#42-running-the-chatbot)
 5.  [Project Structure](#5-project-structure)
 
 ## 1. Overview
 
-This project validates RAG logic in a terminal environment. It uses LangGraph for orchestration, a Gemini LLM for generation, and Weaviate for vector storage. The system can ingest data from local text files and external web pages.
+This project validates RAG logic in a terminal environment. It uses LangGraph for orchestration, a Gemini LLM for generation, and Weaviate for vector storage. The system ingests data from external web pages via a sophisticated, resumable pipeline.
 
 ## 2. Features
 
 *   **Local Weaviate:** Runs a local Docker instance of Weaviate for vector storage.
-*   **Handbook Ingestion:** Ingests local `.txt` files from the `data/handbooks/` directory.
-*   **Intelligent Web Ingestion:** A robust, three-stage pipeline for ingesting web content:
-    1.  **Crawl:** Uses a Playwright-based headless browser to fetch fully JavaScript-rendered HTML, saving it with inferred metadata.
-    2.  **Process:** Extracts clean, structured text from the raw HTML, preserving line breaks.
-    3.  **Translate:** Performs document-level translation from Danish to English using a Gemini LLM.
-    *   **Resumable:** The entire web pipeline tracks progress and can be resumed at any time, avoiding redundant work.
+*   **Intelligent Web Ingestion Pipeline:** A fully automated, resumable pipeline that:
+    1.  **Crawls:** Uses Playwright to fetch JavaScript-rendered HTML from URLs in `data/data_sources.json`.
+    2.  **Processes:** Extracts clean text from the HTML, preserving structure.
+    3.  **Translates:** Performs document-level translation to English using a Gemini LLM.
+    4.  **Chunks & Ingests:** Splits the translated text into semantically coherent chunks and stores them in Weaviate with metadata.
 *   **RAG Agent:** A LangGraph agent that performs RAG against the ingested data.
 *   **Terminal Interaction:** A simple CLI for interactive Q&A.
 
@@ -42,7 +41,7 @@ This project validates RAG logic in a terminal environment. It uses LangGraph fo
 2.  **Configure API Key:**
     Create a `.env` file in the project root and add your Gemini API key:
     ```
-    GEMINI_API_key="your_gemini_api_key_here"
+    GEMINI_API_KEY="your_gemini_api_key_here"
     ```
 3.  **Install Dependencies:**
     ```bash
@@ -57,39 +56,33 @@ This project validates RAG logic in a terminal environment. It uses LangGraph fo
 
 ## 4. Usage
 
-### 4.1 Handbook Ingestion
-To ingest the local handbook text files and start the chat:
+To ensure commands are run in the correct environment, prepend them with `conda run -n chatbot_experiments`.
+
+### 4.1 Ingesting Web Content
+To run the entire resumable pipeline (crawl, process, translate, and ingest into Weaviate), use the `--crawl` flag:
 ```bash
-python src/main.py --ingest
+conda run -n chatbot_experiments python src/main.py --crawl
 ```
+This single command will manage all steps. If interrupted, you can run it again to resume where it left off.
 
-### 4.2 Web Content Ingestion Pipeline
-This is a three-step, resumable pipeline. Run these commands in order. If a step is interrupted, you can simply run it again to continue where it left off.
-
-**Step 1: Crawl Raw HTML**
+### 4.1.1 Testing the Ingestion Process
+To test the chunking and ingestion directly, run the `ingest.py` script:
 ```bash
-python src/ingestion/crawler.py
+conda run -n chatbot_experiments python src/ingestion/ingest.py
 ```
-*Output: Raw, structured HTML JSON files in `data/crawled/structured/`.*
+**Prerequisites:**
+*   Weaviate must be running (`docker-compose up -d`).
+*   Your Conda environment (`chatbot_experiments`) must be created.
+*   A valid `GEMINI_API_KEY` must be set in your `.env` file.
+*   At least one translated English text file (`_en.txt`) must exist in `data/crawled/processed/`.
 
-**Step 2: Process and Clean Text**
+**What to Expect:**
+The script will ingest new or updated `_en.txt` files, chunk them, and load them into the `WebContent` collection in Weaviate. Afterwards, it will display the first 5 ingested chunks, including their source URL, title, chunk index, and content snippet.
+
+### 4.2 Running the Chatbot
+Once data has been ingested, you can start the dialog system for Q&A:
 ```bash
-python src/ingestion/processor.py
-```
-*Output: Cleaned Danish text files (`*_dk.txt`) in `data/crawled/processed/`.*
-
-**Step 3: Translate to English**
-```bash
-python src/ingestion/translator.py
-```
-*Output: Translated English text files (`*_en.txt`) in `data/crawled/processed/`.*
-
-*(Note: The final ingestion of this translated content is handled in a later step of the project plan.)*
-
-### 4.3 Running the Chatbot
-Once data has been ingested, you can start the dialog system:
-```bash
-python src/main.py
+conda run -n chatbot_experiments python src/main.py
 ```
 
 ## 5. Project Structure
@@ -97,25 +90,19 @@ python src/main.py
 .
 ├── data/
 │   ├── crawled/
-│   │   ├── processed/  (Cleaned & Translated Text)
-│   │   ├── structured/ (Raw HTML as JSON)
+│   │   ├── processed/
+│   │   ├── structured/
 │   │   └── progress.json
-│   ├── data_sources.json
-│   └── handbooks/
+│   └── data_sources.json
 ├── src/
 │   ├── agent/
-│   ├── gemini/         (Gemini model utilities)
+│   ├── gemini/
 │   └── ingestion/
-│       ├── crawler.py
-│       ├── processor.py
-│       ├── translator.py
-│       └── ingest.py
 ├── .gitignore
 ├── docker-compose.yml
 ├── environment.yml
-├── GEMINI.md           (Project & Workflow Details)
-├── phases/             (Development Plans)
-├── plan.md
+├── GEMINI.md
+├── phases/
 ├── PROGRESS_LOG.md
 └── README.md
 ```

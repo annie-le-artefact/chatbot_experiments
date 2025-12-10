@@ -1,61 +1,56 @@
 import os
 from dotenv import load_dotenv
-import weaviate
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_weaviate.vectorstores import WeaviateVectorStore
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_qdrant import QdrantVectorStore
+from qdrant_client.http import models
+from src.vector_store.qdrant_db import get_qdrant_client, embedding_model
 
 load_dotenv()
 
-WEAVIATE_URL = "http://localhost:8080"
-WEAVIATE_API_KEY = os.getenv("WEAVIATE_API_KEY") # Not used if anonymous access is enabled
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-def get_weaviate_client():
-    client = weaviate.connect_to_local(
-        host="localhost",
-        port=8080,
-    )
-    return client
 
 def ingest_documents(directory_path: str, collection_name: str):
     if not GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY not found in environment variables.")
 
-    with get_weaviate_client() as client:
-        if client.collections.exists(collection_name):
-            print(f"Collection '{collection_name}' already exists. Deleting and recreating...")
-            client.collections.delete(collection_name)
+    client = get_qdrant_client()
+    
+    # Check if the collection already exists and recreate it
+    collections = client.get_collections().collections
+    if any(collection.name == collection_name for collection in collections):
+        print(f"Collection '{collection_name}' already exists. Deleting and recreating...")
+        client.delete_collection(collection_name)
 
-        # Load documents from the specified directory
-        documents = []
-        for filename in os.listdir(directory_path):
-            if filename.endswith(".txt"):
-                file_path = os.path.join(directory_path, filename)
-                loader = TextLoader(file_path)
-                documents.extend(loader.load())
+    client.recreate_collection(
+        collection_name=collection_name,
+        vectors_config=models.VectorParams(size=768, distance=models.Distance.COSINE),
+    )
 
-        if not documents:
-            print(f"No .txt documents found in {directory_path}. Exiting ingestion.")
-            return
+    # Load documents from the specified directory
+    documents = []
+    for filename in os.listdir(directory_path):
+        if filename.endswith(".txt"):
+            file_path = os.path.join(directory_path, filename)
+            loader = TextLoader(file_path)
+            documents.extend(loader.load())
 
-        # Split documents into chunks
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-        chunks = text_splitter.split_documents(documents)
+    if not documents:
+        print(f"No .txt documents found in {directory_path}. Exiting ingestion.")
+        return
 
-        # Initialize GoogleGenerativeAIEmbeddings
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=GEMINI_API_KEY)
+    # Split documents into chunks
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    chunks = text_splitter.split_documents(documents)
 
-        # Add documents to Weaviate
-        vectorstore = WeaviateVectorStore.from_documents(
-            client=client,
-            documents=chunks,
-            embedding=embeddings,
-            by_text=False,
-            collection_name=collection_name,
-        )
-        print(f"Successfully ingested {len(chunks)} chunks into Weaviate collection '{collection_name}'.")
+    # Add documents to Qdrant
+    vector_store = QdrantVectorStore(
+        client=client,
+        collection_name=collection_name,
+        embedding=embedding_model,
+    )
+    vector_store.add_documents(chunks)
+    print(f"Successfully ingested {len(chunks)} chunks into Qdrant collection '{collection_name}'.")
 
 if __name__ == "__main__":
     # Example usage: Ingest documents from data/handbooks into a collection named "Handbooks"
@@ -70,4 +65,4 @@ if __name__ == "__main__":
         ingest_documents("data/handbooks", "Handbooks")
     except Exception as e:
         print(f"An error occurred during ingestion: {e}")
-        print("Please ensure Weaviate is running (docker-compose up -d) and your GEMINI_API_KEY is set.")
+        print("Please ensure Qdrant is running and your GEMINI_API_KEY is set.")
