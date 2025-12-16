@@ -38,7 +38,18 @@ This document outlines the roadmap for building an Enhanced Dialog Flow architec
     * **Interaction:** Build a simple `while True:` Python terminal loop for testing.
 * **Deliverable:** A CLI tool where a user inputs a question and receives a cited answer.
 
-### Phase 2: Infrastructure Foundation
+### Phase 2: Web Crawling Pipeline
+**Objective:** Implement the end-to-end pipeline for ingesting external web content to build a comprehensive knowledge base.
+* **Focus:** Resumable, multi-stage ingestion and vector store migration.
+* **Tasks:**
+    * **Web Crawling:** Implement a resumable crawler with Playwright to handle JavaScript-rendered pages.
+    * **Content Processing:** Implement resumable scripts to process raw HTML into clean text, and translate it to English.
+    * **Vector Store Migration:** Replace Weaviate with Qdrant for simplified setup and improved compatibility.
+    * **Chunking & Ingestion:** Implement resumable recursive character chunking and ingestion into a Qdrant collection.
+    * **RAG Integration:** Update the LangGraph agent to query the new Qdrant collection.
+* **Deliverable:** A CLI tool that can answer questions based on a knowledge base built from external websites.
+
+### Phase 3: Infrastructure Foundation
 **Objective:** Transition from "Localhost" to "Cloud-Ready" architecture.
 * **Focus:** Containerization and Deployment pipelines.
 * **Diagram Mapping:** *Orchestration (Infrastructure).*
@@ -49,9 +60,9 @@ This document outlines the roadmap for building an Enhanced Dialog Flow architec
         * Configure `charts/app` for the agent application.
     * **CI/CD:** Configure **Google Cloud Build** triggers to build images on git push.
     * **Observability:** Deploy **Prometheus** sidecars to scrape basic application metrics (latency, error rates).
-* **Deliverable:** The Phase 1 logic running inside a Kubernetes cluster.
+* **Deliverable:** The Phase 2 logic running inside a Kubernetes cluster.
 
-### Phase 3: The User Interface Layer
+### Phase 4: The User Interface Layer
 **Objective:** Enable human-friendly interaction and security.
 * **Focus:** UI integration and Auth.
 * **Diagram Mapping:** *User Interface Layer, Orchestration (Auth, Rate Limiting).*
@@ -62,7 +73,7 @@ This document outlines the roadmap for building an Enhanced Dialog Flow architec
     * **Rate Limiting:** Add basic middleware to prevent abuse.
 * **Deliverable:** A secure web link where users can log in and chat.
 
-### Phase 4: Trust, Safety & Guardrails
+### Phase 5: Trust, Safety & Guardrails
 **Objective:** Ensure compliance and reliability.
 * **Focus:** Output quality and safety checks.
 * **Diagram Mapping:** *Final Safety Guardrails, Reasoning & Validation.*
@@ -72,7 +83,7 @@ This document outlines the roadmap for building an Enhanced Dialog Flow architec
     * **Citations:** Enforce strict citation formatting in the output.
 * **Deliverable:** A robust system that refuses to answer unsafe questions and cites sources accurately.
 
-### Phase 5: Advanced Data Retrieval (Knowledge Graph)
+### Phase 6: Advanced Data Retrieval (Knowledge Graph)
 **Objective:** Handle complex regulatory logic.
 * **Focus:** Hybrid Retrieval (Vector + Graph).
 * **Diagram Mapping:** *Data Retrieval (Knowledge Graph), Context Enrichment.*

@@ -31,24 +31,30 @@ This project validates RAG logic in a terminal environment. It uses LangGraph fo
 
 ### Prerequisites
 *   Docker
-*   Python 3.9+ & Conda
+*   Python 3.9+
+*   [uv](https://docs.astral.sh/uv/) - Fast Python package installer
 
 ### Setup Steps
-1.  **Start Qdrant:**
+1.  **Install uv (if not already installed):**
+    ```bash
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+2.  **Start Qdrant:**
     ```bash
     docker-compose up -d
     ```
-2.  **Configure API Key:**
+3.  **Configure API Key:**
     Create a `.env` file in the project root and add your Gemini API key:
     ```
     GEMINI_API_KEY="your_gemini_api_key_here"
     ```
-3.  **Install Dependencies:**
+4.  **Create Virtual Environment and Install Dependencies:**
     ```bash
-    conda env create -f environment.yml
-    conda activate chatbot_experiments
+    uv venv
+    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+    uv pip install -r requirements.txt
     ```
-4.  **Install Playwright Browsers:**
+5.  **Install Playwright Browsers:**
     This one-time command is needed to download the browsers for the web crawler.
     ```bash
     playwright install
@@ -56,12 +62,15 @@ This project validates RAG logic in a terminal environment. It uses LangGraph fo
 
 ## 4. Usage
 
-To ensure commands are run in the correct environment, prepend them with `conda run -n chatbot_experiments`.
+Make sure your virtual environment is activated before running commands:
+```bash
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
 
 ### 4.1 Ingesting Web Content
 To run the entire resumable pipeline (crawl, process, translate, and ingest into Qdrant), use the `--crawl` flag:
 ```bash
-conda run -n chatbot_experiments python -m src.main --crawl --dir data/crawled/processed
+python -m src.main --crawl --dir data/crawled/processed
 ```
 This single command will manage all steps. If interrupted, you can run it again to resume where it left off.
 
@@ -70,7 +79,7 @@ To test the chunking and ingestion directly, you can run the `ingest.py` script,
 
 **Prerequisites:**
 *   Qdrant must be running (`docker-compose up -d`).
-*   Your Conda environment (`chatbot_experiments`) must be created.
+*   Virtual environment must be activated.
 *   A valid `GEMINI_API_KEY` must be set in your `.env` file.
 *   At least one translated English text file (`_en.txt`) must exist in `data/crawled/processed/`.
 
@@ -80,7 +89,7 @@ The script will ingest new or updated `_en.txt` files, chunk them, and load them
 ### 4.2 Running the Chatbot
 Once data has been ingested, you can start the dialog system for Q&A:
 ```bash
-conda run -n chatbot_experiments python -m src.main
+python -m src.main
 ```
 
 ## 5. Project Structure
@@ -98,7 +107,6 @@ conda run -n chatbot_experiments python -m src.main
 │   └── ingestion/
 ├── .gitignore
 ├── docker-compose.yml
-├── environment.yml
 ├── GEMINI.md
 ├── phases/
 ├── PROGRESS_LOG.md

@@ -1,0 +1,53 @@
+{
+  "phase": 3,
+  "name": "Infrastructure Foundation",
+  "objective": "Transition from 'Localhost' to 'Cloud-Ready' architecture.",
+  "status": "pending",
+  "sub_phases": [
+    {
+      "name": "Phase 3.1: Containerization and Deployment Pipelines",
+      "objective": "Dockerize the application and create Helm charts for deployment.",
+      "status": "pending",
+      "git": {
+        "commit_message": "feat(infra): Dockerize application and create Helm charts"
+      },
+      "tasks": [
+        {
+          "step": 1,
+          "prompt": "Create a `Dockerfile` for the Python application.",
+          "status": "pending"
+        },
+        {
+          "step": 2,
+          "prompt": "Create a Helm chart in `charts/qdrant` for the vector store.",
+          "status": "pending"
+        },
+        {
+          "step": 3,
+          "prompt": "Create a Helm chart in `charts/app` for the agent application.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "name": "Phase 3.2: CI/CD and Observability",
+      "objective": "Set up CI/CD with Google Cloud Build and implement basic observability.",
+      "status": "pending",
+      "git": {
+        "commit_message": "feat(infra): Configure CI/CD and observability"
+      },
+      "tasks": [
+        {
+          "step": 1,
+          "prompt": "Configure Google Cloud Build triggers to build images on git push.",
+          "status": "pending"
+        },
+        {
+          "step": 2,
+          "prompt": "Deploy Prometheus sidecars to scrape basic application metrics (latency, error rates).",
+          "status": "pending"
+        }
+      ]
+    }
+  ]
+}

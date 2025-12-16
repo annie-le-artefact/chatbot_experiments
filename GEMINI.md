@@ -14,31 +14,43 @@ The system is built in Python and leverages several key technologies:
 
 ### Prerequisites
 - Docker
-- Python 3.9+ & Conda
+- Python 3.9+
+- [uv](https://docs.astral.sh/uv/) - Fast Python package installer
 
 ### 1. Set Up Environment
 
-**a. Start Qdrant:**
+**a. Install uv (if not already installed):**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**b. Start Qdrant:**
 ```bash
 docker-compose up -d
 ```
 
-**b. Configure API Key:**
+**c. Configure API Key:**
 Create a `.env` file in the project root and add your Gemini API key.
 ```
 GEMINI_API_KEY="your_gemini_api_key_here"
 ```
 
-**c. Install Dependencies:**
+**d. Create Virtual Environment and Install Dependencies:**
 ```bash
-conda env create -f environment.yml
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -r requirements.txt
 ```
-This creates the `chatbot_experiments` environment and installs dependencies from `requirements.txt`.
 
 ### 2. Run the Application
-To ensure commands are run in the correct environment, prepend them with `conda run -n chatbot_experiments`.
+Make sure your virtual environment is activated:
 ```bash
-conda run -n chatbot_experiments python src/main.py --crawl
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+Then run the application:
+```bash
+python -m src.main --crawl
 ```
 
 To stop the application, type `exit` in the terminal.
@@ -62,7 +74,7 @@ Development is organized into **phases** (for new features) and **fixes** (for b
         *   Update its `status` to `in_progress` in the `.json` file.
         *   Implement the necessary code.
         *   Test and verify that the changes work as expected and do not introduce regressions.
-        *   For example: `conda run -n chatbot_experiments python src/main.py --crawl`
+        *   For example: `python -m src.main --crawl`
         *   If bugs are found, they should be addressed before moving on.
         *   Once the task is complete, update its `status` to `completed`.
 
